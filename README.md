@@ -94,8 +94,16 @@ docker run -p 8080:8080 --env-file .env summarizer-agent
 
 ## 🛡 Security & Best Practices
 - **Secret Management**: `.env` is ignored by Git to prevent API key leakage. For production, use **Google Secret Manager**.
-- **Containerization**: Optimized Dockerfile for deployment to **Google Cloud Run**.
+- **Containerization**: Optimized Dockerfile f
+
+
+or deployment to **Google Cloud Run**.
 - **Modularity**: ADK-compliant structure ensures easy scalability and tool integration.
+
+
+
+## Demo Video 
+https://github.com/user-attachments/assets/2d5cbe27-aa0f-4a64-9e0f-792788d8ef5a
 
 ---
 
@@ -105,3 +113,5 @@ This implementation demonstrates:
 - Implementation of **Agent Development Kit (ADK)** patterns (`Runner`, `SessionService`).
 - Robust error handling and model fallback strategies.
 - Clean, modular, and well-documented Python code.
+
+  
