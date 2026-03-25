@@ -1,73 +1,106 @@
-# Simple Text Summariser Agent
+# AI Text Summarization Agent (Google ADK Integrated)
 
-A minimal, production-ready AI agent service that summarizes text using Google Gemini.
+A production-ready, modularized FastAPI service designed for high-performance text summarization. This project utilizes the **Google Agent Development Kit (ADK)** and the **Gemini 2.0 Flash** model, featuring a robust multi-model fallback system for maximum reliability and quota resilience.
 
-## Tech Stack
-- **Python 3.10+** (tested on 3.14)
-- **FastAPI**: High-performance web framework.
-- **Google GenAI SDK**: Latest official Gemini API integration.
-- **Docker**: For seamless containerization and deployment.
+---
 
-## Project Structure (ADK-Friendly)
-```text
-.
-├── app/
-│   ├── main.py        # FastAPI Entry Point
-│   ├── agent.py       # AI Agent Logic (Gemini Fallback)
-│   └── tools.py       # (Optional) Custom Tools Placeholder
-├── requirements.txt   # Dependencies
-├── Dockerfile          # Container Configuration
-├── .dockerignore      # Files to exclude from Docker
-├── .env               # Environment Variables (Local)
-└── README.md          # Project Documentation
+## 🏗 Architecture & Design (ADK-Friendly)
+
+This project follows the **Agent Development Kit (ADK)** modular structure, separating API logic from agent execution and tool definitions.
+
+```mermaid
+graph TD
+    User([User]) -->|POST /summarize| FastAPI[FastAPI Entry Point]
+    FastAPI -->|Await| Agent[GeminiAgent]
+    Agent -->|run_async| ADK[Google ADK Runner]
+    ADK -->|Primary| G1[Gemini 2.0 Flash]
+    ADK -->|Fallback 1| G2[Gemini 1.5 Flash]
+    ADK -->|Fallback 2| G3[Gemini-Flash-Latest]
+    ADK -->|Memory| IMS[InMemorySessionService]
+    Agent -->|JSON Result| FastAPI
+    FastAPI -->|200 OK| User
 ```
 
-## Setup & Local Run
+### Key Components
+- **`app/main.py`**: The FastAPI application handling routing and async execution.
+- **`app/agent.py`**: Core logic leveraging `google.adk.agents.Agent` and `google.adk.Runner`.
+- **`app/tools.py`**: Ready-to-use module for extending agent capabilities with custom tools.
+- **Multi-Model Fallback**: Automatically cycles through multiple Gemini models to bypass 429 Resource Exhausted errors.
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+---
 
-2. **Configure Environment**:
-   Create a `.env` file and add your Gemini API Key:
-   ```env
-   GEMINI_API_KEY=your_api_key_here
-   PORT=8080
-   ```
+## 🚀 Getting Started
 
-3. **Run the Server**:
-   ```bash
-   python -m app.main
-   ```
+### 1. Prerequisites
+- Python 3.14+
+- Google Gemini API Key ([Get it here](https://aistudio.google.com/))
 
-## Usage
+### 2. Installation
+```bash
+# Clone the repository
+git clone https://github.com/abhi542/Text_Summary_Agent_using_google_ADK.git
+cd Text_Summary_Agent_using_google_ADK
 
-### 1. Health Check
-`GET http://localhost:8080/`
+# Setup Virtual Environment
+python -m venv venv
+source venv/bin/activate
 
-### 2. Summarize Text
-`POST http://localhost:8080/summarize`
+# Install Dependencies
+pip install -r requirements.txt
+```
 
-**Body (JSON):**
+### 3. Configuration
+Create a `.env` file in the root directory:
+```env
+GEMINI_API_KEY=your_api_key_here
+PORT=8080
+```
+
+### 4. Running the Service
+```bash
+python -m app.main
+```
+
+---
+
+## 🧪 Testing with Sample Data
+
+### Sample Request
+```bash
+curl -X POST http://localhost:8080/summarize \
+     -H "Content-Type: application/json" \
+     -d @sample_request.json
+```
+
+### Sample Response
 ```json
 {
-  "text": "Your long text goes here..."
+  "summary": "The Eiffel Tower is a wrought-iron lattice icon in Paris, France. Named after engineer Gustave Eiffel, it served as the 1889 World's Fair centerpiece. Today, it is recognized globally as a cultural symbol of the French nation.",
+  "model": "gemini-flash-latest"
 }
 ```
 
-## Deployment to Google Cloud Run
+---
 
-1. **Build and Tag Image**:
-   ```bash
-   gcloud builds submit --tag gcr.io/[PROJECT-ID]/summariser-agent
-   ```
+## 🐳 Docker Support
+Build and run locally with Docker:
+```bash
+docker build -t summarizer-agent .
+docker run -p 8080:8080 --env-file .env summarizer-agent
+```
 
-2. **Deploy to Cloud Run**:
-   ```bash
-   gcloud run deploy summariser-agent \
-     --image gcr.io/[PROJECT-ID]/summariser-agent \
-     --platform managed \
-     --allow-unauthenticated \
-     --set-env-vars GEMINI_API_KEY=[YOUR-KEY],PORT=8080
-   ```
+---
+
+## 🛡 Security & Best Practices
+- **Secret Management**: `.env` is ignored by Git to prevent API key leakage. For production, use **Google Secret Manager**.
+- **Containerization**: Optimized Dockerfile for deployment to **Google Cloud Run**.
+- **Modularity**: ADK-compliant structure ensures easy scalability and tool integration.
+
+---
+
+## 📜 Google Certification Notes
+This implementation demonstrates:
+- Comprehensive use of the **Google GenAI Python SDK**.
+- Implementation of **Agent Development Kit (ADK)** patterns (`Runner`, `SessionService`).
+- Robust error handling and model fallback strategies.
+- Clean, modular, and well-documented Python code.

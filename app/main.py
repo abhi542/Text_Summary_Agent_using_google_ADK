@@ -33,7 +33,7 @@ async def summarize(request: SummarizeRequest):
         raise HTTPException(status_code=400, detail="Input text cannot be empty")
 
     try:
-        result = agent.summarize(request.text)
+        result = await agent.summarize(request.text)
         return SummarizeResponse(**result)
     except Exception as e:
         error_msg = str(e)
