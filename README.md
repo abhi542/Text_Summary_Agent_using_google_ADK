@@ -83,6 +83,7 @@ curl -X POST http://localhost:8080/summarize \
 }
 ```
 <img width="1600" height="1040" alt="image" src="https://github.com/user-attachments/assets/1e6b5c79-dbba-41fe-bf8e-252d29a5cd6e" />
+<img width="1600" height="1035" alt="image" src="https://github.com/user-attachments/assets/22b97a1f-a71c-4704-bc97-7a027aa38a8d" />
 
 ---
 
