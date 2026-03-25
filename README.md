@@ -1,5 +1,8 @@
 # AI Text Summarization Agent (Google ADK Integrated)
 
+**🔴 Live Service**: [https://summarizer-agent-654230503748.us-central1.run.app/docs](https://summarizer-agent-654230503748.us-central1.run.app/docs)  
+**✅ Status**: Deployed and Working (Google Cloud Run)
+
 A production-ready, modularized FastAPI service designed for high-performance text summarization. This project utilizes the **Google Agent Development Kit (ADK)** and the **Gemini 2.0 Flash** model, featuring a robust multi-model fallback system for maximum reliability and quota resilience.
 
 ---
@@ -94,15 +97,13 @@ docker run -p 8080:8080 --env-file .env summarizer-agent
 
 ## 🛡 Security & Best Practices
 - **Secret Management**: `.env` is ignored by Git to prevent API key leakage. For production, use **Google Secret Manager**.
-- **Containerization**: Optimized Dockerfile f
-
-
-or deployment to **Google Cloud Run**.
+- **Containerization**: Optimized Dockerfile for deployment to **Google Cloud Run**.
 - **Modularity**: ADK-compliant structure ensures easy scalability and tool integration.
 
+---
 
-
-## Demo Video 
+## 🎞 Demo & Visuals
+### Demo Video 
 https://github.com/user-attachments/assets/2d5cbe27-aa0f-4a64-9e0f-792788d8ef5a
 
 ---
@@ -114,4 +115,42 @@ This implementation demonstrates:
 - Robust error handling and model fallback strategies.
 - Clean, modular, and well-documented Python code.
 
-  
+---
+
+## 🛠 Detailed GCP Deployment Steps (Ref: Project Certification)
+
+For documentation purposes, the following exact steps were taken to deploy this service:
+
+1.  **Project Initialization**: Set up project `sodium-cat-461211-m5` in Google Cloud Console.
+2.  **Billing Integration**: Linked the project to a valid Google Billing Account to enable premium AI services.
+3.  **API Enablement**: Enabled the following essential Google Cloud APIs via Cloud Shell:
+    ```bash
+    gcloud services enable artifactregistry.googleapis.com cloudbuild.googleapis.com run.googleapis.com
+    ```
+4.  **Containerization**: Built the application using **Google Cloud Build** and stored the image in **Artifact Registry**:
+    ```bash
+    gcloud builds submit --tag gcr.io/sodium-cat-461211-m5/summarizer-agent .
+    ```
+5.  **Service Deployment**: Deployed to **Google Cloud Run** with serverless scaling and secure environment variables for `GEMINI_API_KEY`:
+    ```bash
+    gcloud run deploy summarizer-agent \
+        --image gcr.io/sodium-cat-461211-m5/summarizer-agent \
+        --platform managed \
+        --region us-central1 \
+        --allow-unauthenticated \
+        --set-env-vars GEMINI_API_KEY=[YOUR-KEY]
+    ```
+
+---
+
+## 🖥 Where to view in Google Cloud UI
+
+To manage your live service, navigate to these sections in the [GCP Console](https://console.cloud.google.com/):
+
+- **Cloud Run**: Search for "Cloud Run" to see the `summarizer-agent` status, logs, and traffic metrics.
+- **Cloud Build**: Search for "Cloud Build" to see the history of your container builds.
+- **Artifact Registry**: Search for "Artifact Registry" to see your stored container images.
+- **Log Explorer**: Search for "Logs Explorer" to see real-time AI agent execution logs.
+
+---
+**Submission Ready**: This repository contains the full source, modular ADK integration, and documented deployment path for final certification.
